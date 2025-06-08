@@ -5,40 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EKAL SHOP Store</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f9;
+    body, html {
       margin: 0;
       padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100%;
+    }
+
+    /* INTRO VIDEO */
+    #intro {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    #intro video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #skip-btn {
+      position: absolute;
+      bottom: 30px;
+      padding: 10px 20px;
+      background-color: rgba(255,255,255,0.8);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      z-index: 10000;
+    }
+
+    /* LIVE WALLPAPER */
+    #background-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    /* STORE CONTENT */
+    #main-content {
+      display: none;
+      position: relative;
+      z-index: 1;
     }
 
     .container {
       max-width: 600px;
       margin: 40px auto;
       padding: 20px;
-      background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
     h1 {
       text-align: center;
-      color: #333;
+      font-size: 28px;
+      color: #222;
+      margin-bottom: 20px;
     }
 
     .product {
-      background: #e6f0ff;
-      margin: 10px 0;
+      background: #eaf4ff;
+      border-radius: 8px;
       padding: 15px;
-      border-radius: 6px;
-      display: flex;
-      flex-direction: column;
+      margin-bottom: 15px;
     }
 
     .product-info {
       display: flex;
       justify-content: space-between;
       margin-bottom: 10px;
+      font-size: 16px;
     }
 
     .price {
@@ -47,10 +98,12 @@
     }
 
     .buy-button {
+      display: inline-block;
+      text-align: center;
       background-color: #25D366;
       color: white;
       padding: 10px;
-      text-align: center;
+      width: 100%;
       border: none;
       border-radius: 5px;
       text-decoration: none;
@@ -58,102 +111,123 @@
     }
 
     .buy-button:hover {
-      background-color: #1ebc59;
+      background-color: #1ebe5d;
     }
 
     .footer {
       text-align: center;
-      margin-top: 20px;
-      color: #777;
+      margin-top: 25px;
       font-size: 14px;
+      color: #555;
     }
   </style>
 </head>
 <body>
+
+<!-- INTRO -->
+<div id="intro">
+  <video id="introVideo" autoplay muted>
+    <source src="https://files.catbox.moe/r9yaun.mp4" type="video/mp4">
+    Browser anda tidak mendukung video ini.
+  </video>
+  <button id="skip-btn">Lewati</button>
+</div>
+
+<!-- BACKGROUND VIDEO -->
+<video autoplay muted loop id="background-video">
+  <source src="https://files.catbox.moe/cgijdz.mp4" type="video/mp4">
+  Browser anda tidak mendukung video latar.
+</video>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
   <div class="container">
     <h1>🥶 EKAL SHOP 👻</h1>
 
-    <!-- Produk List -->
     <div class="product">
-      <div class="product-info">
-        <span>[PANEL 10GB]</span><span class="price">RM2.00</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[PANEL%2010GB]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>JASA BUG 1 NOMBOR</span><span class="price">RM1.00</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20JASA%20BUG%201%20NOMBOR" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[PANEL UNI]</span><span class="price">RM2.50</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[PANEL%20UNI]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>PANEL 10GB</span><span class="price">RM1.50</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20PANEL%2010GB" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[RESELLER PANEL]</span><span class="price">RM7.00</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[RESELLER%20PANEL]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>PANEL UNI</span><span class="price">RM2.00</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20PANEL%20UNI" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[PROMOTER BAHAN 1×]</span><span class="price">RM0.20</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[PROMOTER%20BAHAN%201×]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>RESELLER PANEL</span><span class="price">RM7.00</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20RESELLER%20PANEL" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[BOT PUSH KONTAK]</span><span class="price">RM3.00</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[BOT%20PUSH%20KONTAK]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>PROMOTER BAHAN 1×</span><span class="price">RM0.20</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20PROMOTER%20BAHAN%201×" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[BOT PROMOTER×PUSH KONTAK]</span><span class="price">RM4.50</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[BOT%20PROMOTER×PUSH%20KONTAK]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>BOT PUSH KONTAK</span><span class="price">RM3.00</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20BOT%20PUSH%20KONTAK" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[BOT ALL FITUR]</span><span class="price">RM5.00</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[BOT%20ALL%20FITUR]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>BOT PROMOTER×PUSH KONTAK</span><span class="price">RM4.50</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20BOT%20PROMOTER×PUSH%20KONTAK" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[SC PUSH KONTAK]</span><span class="price">RM3.00</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[SC%20PUSH%20KONTAK]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>BOT ALL FITUR</span><span class="price">RM5.00</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20BOT%20ALL%20FITUR" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[SC CPANEL]</span><span class="price">RM1.50</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[SC%20CPANEL]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>SC PUSH KONTAK</span><span class="price">RM3.00</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20SC%20PUSH%20KONTAK" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[SC JAGA GRUP]</span><span class="price">RM5.00</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20beli%20[SC%20JAGA%20GRUP]" target="_blank">Beli Sekarang</a>
+      <div class="product-info"><span>SC CPANEL</span><span class="price">RM1.50</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20SC%20CPANEL" target="_blank">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <div class="product-info">
-        <span>[SC BUG GACOR]</span><span class="price">❓TANYA OWNER</span>
-      </div>
-      <a class="buy-button" href="https://wa.me/601116466583?text=Hai%20saya%20ingin%20tanya%20harga%20untuk%20[SC%20BUG%20GACOR]" target="_blank">Tanya Owner</a>
+      <div class="product-info"><span>SC JAGA GRUP</span><span class="price">RM5.00</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20SC%20JAGA%20GRUP" target="_blank">Beli Sekarang</a>
+    </div>
+
+    <div class="product">
+      <div class="product-info"><span>SC BUG GACOR</span><span class="price">❓ TANYA OWNER</span></div>
+      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20tanya%20harga%20SC%20BUG%20GACOR" target="_blank">Tanya Owner</a>
     </div>
 
     <div class="footer">
       © 2025 EKAL SHOP • Order via WhatsApp 📲
     </div>
   </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+  const video = document.getElementById('introVideo');
+  const intro = document.getElementById('intro');
+  const main = document.getElementById('main-content');
+  const skipBtn = document.getElementById('skip-btn');
+
+  video.addEventListener('ended', () => {
+    intro.style.display = 'none';
+    main.style.display = 'block';
+  });
+
+  skipBtn.addEventListener('click', () => {
+    video.pause();
+    intro.style.display = 'none';
+    main.style.display = 'block';
+  });
+</script>
+
 </body>
 </html>
