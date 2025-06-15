@@ -120,6 +120,58 @@
       font-size: 14px;
       color: #555;
     }
+    #qr-toggle-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10001;
+  background-color: #ffffffcc;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#qr-popup {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  z-index: 10002;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.qr-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+#close-qr-btn {
+  margin-top: 15px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
   </style>
 </head>
 <body>
@@ -143,7 +195,14 @@
 <div id="main-content">
   <div class="container">
     <h1>🥶 EKAL SHOP 👻</h1>
-
+<!-- TOMBOL QR CODE -->
+<button id="qr-toggle-btn">Tampilkan QR Code</button>
+<div id="qr-popup">
+  <div class="qr-content">
+    <img src="https://files.catbox.moe/2x5clu.jpg" alt="QR Code" />
+    <button id="close-qr-btn">Tutup</button>
+  </div>
+</div>
     <div class="product">
       <div class="product-info"><span>JASA BUG 1 NOMBOR</span><span class="price">RM1.00</span></div>
       <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20JASA%20BUG%201%20NOMBOR" target="_blank">Beli Sekarang</a>
@@ -211,6 +270,17 @@
   const intro = document.getElementById('intro');
   const main = document.getElementById('main-content');
   const skipBtn = document.getElementById('skip-btn');
+  const qrBtn = document.getElementById('qr-toggle-btn');
+  const qrPopup = document.getElementById('qr-popup');
+  const closeQrBtn = document.getElementById('close-qr-btn');
+
+  qrBtn.addEventListener('click', () => {
+    qrPopup.style.display = 'flex';
+  });
+
+  closeQrBtn.addEventListener('click', () => {
+    qrPopup.style.display = 'none';
+  });
 
   video.addEventListener('ended', () => {
     intro.style.display = 'none';
