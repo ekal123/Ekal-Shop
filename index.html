@@ -148,7 +148,34 @@
       <div class="product-info"><span>JASA BUG 1 NOMBOR</span><span class="price">RM1.00</span></div>
       <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20JASA%20BUG%201%20NOMBOR" target="_blank">Beli Sekarang</a>
     </div>
+ 
+  <meta charset="UTF-8">
+  <title>Tampilkan QR Code</title>
+  <style>
+    #qrCode {
+      display: none;
+      margin-top: 20px;
+      max-width: 300px;
+      height: auto;
+    }
 
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="tampilkanQRCode()">Tampilkan QR Code</button>
+  <br>
+  <img id="qrCode" src="https://files.catbox.moe/2x5clu.jpg" alt="QR Code" />
+
+  <script>
+    function tampilkanQRCode() {
+      var qr = document.getElementById("qrCode");
+      qr.style.display = "block";
+    }
     <div class="product">
       <div class="product-info"><span>PANEL 10GB</span><span class="price">RM1.50</span></div>
       <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20PANEL%2010GB" target="_blank">Beli Sekarang</a>
