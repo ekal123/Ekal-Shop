@@ -1,303 +1,419 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="ms">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Website Store</title>
+  <title>Eykal Shop</title>
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      height: 100%;
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+    :root{
+      --bg: rgba(0,0,0,0.6);
+      --card: rgba(15,15,20,0.75);
+      --accent: #00ffe0;
+      --led: #ffffff;
+      --text: #eef3f7;
+      --muted: #b8c2cc;
+      --danger: #ff4a4a;
+      --shadow: 0 8px 30px rgba(0,0,0,.4);
+      --radius: 18px;
     }
 
-    /* INTRO VIDEO */
-    #intro {
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      overflow-x: hidden;
+      background:#000;
+    }
+
+    /* ====== Video Wallpaper ====== */
+    .bg-video{
       position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      flex-direction: column;
-    }
-
-    #intro video {
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
+      z-index: -2;
+      filter: saturate(1.1) contrast(1.05) brightness(0.8);
     }
-
-    #skip-btn {
-      position: absolute;
-      bottom: 30px;
-      padding: 10px 20px;
-      background-color: rgba(255,255,255,0.8);
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      z-index: 10000;
-    }
-
-    /* LIVE WALLPAPER */
-    #background-video {
+    .bg-overlay{
       position: fixed;
-      right: 0;
-      bottom: 0;
-      min-width: 100%;
-      min-height: 100%;
-      object-fit: cover;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,.35), rgba(0,0,0,.75));
       z-index: -1;
     }
 
-    /* STORE CONTENT */
-    #main-content {
-      display: none;
-      position: relative;
-      z-index: 1;
+    /* ====== Intro / MASUK ====== */
+    .intro{
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      padding:24px;
+      backdrop-filter: blur(2px);
+    }
+    .intro-card{
+      width:min(560px, 92vw);
+      background: var(--card);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: calc(var(--radius) + 6px);
+      padding: 30px 26px;
+      text-align:center;
+      box-shadow: var(--shadow);
+    }
+    .intro-title{
+      font-size: clamp(36px, 7vw, 56px);
+      margin: 6px 0 18px;
+      letter-spacing: .08em;
+      color: #7df9ff;
+      text-transform: uppercase;
+      animation: neonPulse 2.2s ease-in-out infinite;
+      text-shadow:
+        0 0 6px #7df9ff,
+        0 0 14px #7df9ff,
+        0 0 28px #00eaff,
+        0 0 56px #00c3ff;
+    }
+    .led-strip{
+      display:flex; gap:10px; justify-content:center; margin-bottom:18px;
+    }
+    .led-dot{
+      width:14px; height:14px; border-radius:50%;
+      box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+      animation: ledBlink 1.2s infinite;
+    }
+    .led-dot:nth-child(1){ color:#ff3b3b; animation-delay:0s; }
+    .led-dot:nth-child(2){ color:#ffd93b; animation-delay:.2s; }
+    .led-dot:nth-child(3){ color:#3bff7d; animation-delay:.4s; }
+    .led-dot:nth-child(4){ color:#3bd0ff; animation-delay:.6s; }
+    .led-dot:nth-child(5){ color:#c93bff; animation-delay:.8s; }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding: 14px 22px;
+      font-weight: 700; letter-spacing:.04em;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      color:#001416; background: linear-gradient(180deg, #7df9ff, #00eaff);
+      cursor:pointer;
+      box-shadow: 0 10px 24px rgba(0,234,255,.25);
+      transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.02); box-shadow: 0 12px 30px rgba(0,234,255,.3); }
+    .btn:active{ transform: translateY(0); }
+
+    .hint{ color:var(--muted); font-size:.9rem; margin-top:10px }
+
+    /* ====== Main ====== */
+    .wrap{
+      display:none; /* shown after MASUK */
+      min-height: 100dvh;
+      padding: 90px 18px 42px;
+      max-width: 980px;
+      margin: 0 auto;
     }
 
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    /* Running LED Title */
+    .marquee{
+      position: sticky; top:0; z-index:5;
+      display:flex; align-items:center; gap:10px;
+      background: linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));
+      padding: 12px 10px;
+      backdrop-filter: blur(3px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .marquee-track{
+      overflow: hidden; white-space: nowrap; flex:1;
+    }
+    .marquee-text{
+      display:inline-block;
+      animation: scroll 14s linear infinite;
+      color: var(--led);
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      text-shadow:
+        0 0 6px #fff,
+        0 0 12px #fff,
+        0 0 22px #e9f3ff,
+        0 0 44px #e9f3ff;
     }
 
-    h1 {
-      text-align: center;
-      font-size: 28px;
-      color: #222;
-      margin-bottom: 20px;
+    .card{
+      background: var(--card);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
     }
 
-    .product {
-      background: #eaf4ff;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
+    .profile{
+      display:flex; align-items:center; gap:16px; margin-top:16px;
+    }
+    .avatar{
+      width:86px; height:86px; border-radius: 20px; object-fit: cover;
+      box-shadow: 0 8px 22px rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .title{
+      font-size: clamp(22px, 3.5vw, 28px);
+      margin:0 0 6px;
+    }
+    .sub{ margin:0; color:var(--muted) }
+
+    .grid{
+      margin-top: 18px;
+      display:grid; gap:12px;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+    .action{
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.1);
+      padding:14px 16px;
+      border-radius: 14px;
+      cursor:pointer;
+      text-align:center;
+      font-weight:700;
+      transition: background .15s ease, transform .15s ease;
+    }
+    .action:hover{ background: rgba(255,255,255,.12); transform: translateY(-1px); }
+
+    /* Produk */
+    .list{
+      margin-top: 16px;
+      display: grid; gap: 12px;
+    }
+    .item{
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius: 14px;
+      padding: 14px;
+      display:flex; align-items: center; justify-content: space-between; gap:10px;
+      flex-wrap: wrap;
+    }
+    .price{ color:#b9ffef; font-weight:700; }
+    .buy{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 14px; border-radius: 12px; font-weight:800; letter-spacing:.04em;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, #cafff7, #7df9ff);
+      color:#01252b; cursor:pointer;
+      box-shadow: 0 8px 18px rgba(0,234,255,.2);
+      text-decoration:none;
+    }
+    .buy:hover{ filter: brightness(1.02); transform: translateY(-1px); }
+
+    /* Modal */
+    .modal{
+      position: fixed; inset:0; display:none; place-items: center;
+      background: rgba(0,0,0,.65);
+      backdrop-filter: blur(4px);
+      padding: 18px;
+      z-index:10;
+    }
+    .modal-card{
+      width:min(520px, 96vw);
+      background: #0e1116;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modal-head{
+      display:flex; justify-content:space-between; align-items:center;
+      padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0));
+    }
+    .modal-title{ margin:0; font-weight:800; letter-spacing:.06em }
+    .modal-body{ padding:10px; }
+    .modal-img{
+      width:100%; height:auto; border-radius: 12px; display:block;
+    }
+    .close{
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      padding:8px 12px; border-radius: 10px; cursor:pointer; color:#fff; font-weight:700;
+    }
+    .close:hover{ background: rgba(255,255,255,.14); }
+
+    /* Utils */
+    @keyframes neonPulse{
+      0%,100%{ filter: drop-shadow(0 0 2px #7df9ff) drop-shadow(0 0 22px #00d8ff); }
+      50%{ filter: drop-shadow(0 0 8px #7df9ff) drop-shadow(0 0 42px #00d8ff); }
+    }
+    @keyframes ledBlink{
+      0%,100%{ opacity:.35; transform: scale(.9); }
+      50%{ opacity:1; transform: scale(1); }
+    }
+    @keyframes scroll{
+      from{ transform: translateX(100%); }
+      to{ transform: translateX(-100%); }
     }
 
-    .product-info {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 16px;
+    @media (max-width:620px){
+      .grid{ grid-template-columns: 1fr; }
+      .item{ gap:14px; }
     }
-
-    .price {
-      font-weight: bold;
-      color: #007bff;
-    }
-
-    .buy-button {
-      display: inline-block;
-      text-align: center;
-      background-color: #25D366;
-      color: white;
-      padding: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .buy-button:hover {
-      background-color: #1ebe5d;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 25px;
-      font-size: 14px;
-      color: #555;
-    }
-    #qr-toggle-btn {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 10001;
-  background-color: #ffffffcc;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-
-#qr-popup {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.8);
-  z-index: 10002;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.qr-content {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  max-width: 90%;
-  max-height: 90%;
-}
-
-.qr-content img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
-}
-
-#close-qr-btn {
-  margin-top: 15px;
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
   </style>
 </head>
 <body>
 
-<!-- INTRO -->
-<div id="intro">
-  <video id="introVideo" autoplay muted>
-    <source src="https://files.catbox.moe/awha8f.mp4" type="video/mp4">
-    Browser anda tidak mendukung video ini.
-  </video>
-  <button id="skip-btn">Lewati</button>
-</div>
+  <!-- Wallpaper video -->
+  <video class="bg-video" src="https://files.catbox.moe/fxeuxn.mp4" autoplay muted loop playsinline></video>
+  <div class="bg-overlay"></div>
 
-<!-- BACKGROUND VIDEO -->
-<video autoplay muted loop id="background-video">
-  <source src="https://files.catbox.moe/37icl8.mp4" type="video/mp4">
-  Browser anda tidak mendukung video latar.
-</video>
+  <!-- Audio lagu (main selepas klik MASUK) -->
+  <audio id="music" src="https://files.catbox.moe/rapjmb.mp4" preload="none"></audio>
 
-<!-- MAIN CONTENT -->
-<div id="main-content">
-  <div class="container">
-    <h1>🥶 EKAL SHOP 👻</h1>
-<!-- TOMBOL QR CODE -->
-<button id="qr-toggle-btn">Tampilkan QR Code</button>
-<div id="qr-popup">
-  <div class="qr-content">
-    <img src="https://files.catbox.moe/2x5clu.jpg" alt="QR Code" />
-    <button id="close-qr-btn">Tutup</button>
+  <!-- INTRO -->
+  <section class="intro" id="intro">
+    <div class="intro-card">
+      <div class="led-strip">
+        <span class="led-dot"></span><span class="led-dot"></span><span class="led-dot"></span><span class="led-dot"></span><span class="led-dot"></span>
+      </div>
+      <div class="intro-title">MASUK</div>
+      <button class="btn" id="enterBtn">MASUK</button>
+      <div class="hint">Tekan “MASUK” untuk masuk kedai & main lagu</div>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="wrap" id="app">
+
+    <!-- Running LED header -->
+    <div class="marquee">
+      <div class="marquee-track">
+        <div class="marquee-text">✦ Eykal Shop Open ✦ Eykal Shop Open ✦ Eykal Shop Open ✦ Eykal Shop Open ✦</div>
+      </div>
+    </div>
+
+    <section class="card">
+      <div class="profile">
+        <img class="avatar" src="https://files.catbox.moe/1lpqwo.jpg" alt="Eykal Profile">
+        <div>
+          <h2 class="title">Eykal Shop</h2>
+          <p class="sub">Servis pantas • Harga mesra • Support 24/7</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <button class="item" id="qrBtn">QR TNG</button>
+        <button class="item" id="lihatBtn">LIHAT PRODUK</button>
+      </div>
+
+      <!-- Senarai produk (tersembunyi awal) -->
+      <div id="produk" class="list" style="display:none">
+        <!-- PAID PROMOTE -->
+        <div class="item">
+          <div><strong>PAID PROMOTE - 1x - 200group</strong> </div>
+          <div class="price">RM0.20</div>
+          <a class="buy" href="https://wa.me/601155431924" target="_blank" rel="noopener">Beli Sekarang</a>
+        </div>
+        <div class="item">
+          <div><strong>PAID PROMOTE - 2x - 200group</strong> </div>
+          <div class="price">RM0.40</div>
+          <a class="buy" href="https://wa.me/601155431924" target="_blank" rel="noopener">Beli Sekarang</a>
+        </div>
+        <div class="item">
+          <div><strong>PAID PROMOTE - 3x - 200group</strong> </div>
+          <div class="price">RM0.50</div>
+          <a class="buy" href="https://wa.me/601155431924" target="_blank" rel="noopener">Beli Sekarang</a>
+        </div>
+
+        <!-- BOT WHATSAPP -->
+        <div class="item">
+          <div><strong>BOT WHATSAPP 14 HARI AKTIF</strong> </div>
+          <div class="price">RM3.00</div>
+          <a class="buy" href="https://wa.me/601155431924" target="_blank" rel="noopener">Beli Sekarang</a>
+        </div>
+        <div class="item">
+          <div><strong>BOT WHATSAPP 30 HARI AKTIF</strong> </div>
+          <div class="price">RM4.00</div>
+          <a class="buy" href="https://wa.me/601155431924" target="_blank" rel="noopener">Beli Sekarang</a>
+        </div>
+
+        <!-- PANEL -->
+        <div class="item">
+          <div><strong>PANEL UNLI 30 HARI AKTIF</strong> </div>
+          <div class="price">RM2.00</div>
+          <a class="buy" href="https://wa.me/601155431924" target="_blank" rel="noopener">Beli Sekarang</a>
+        </div>
+
+        <!-- PANEL -->
+        <div class="item">
+          <div><strong>PANEL 10GB 20 HARI AKTIF</strong> </div>
+          <div class="price">RM1.50</div>
+          <a class="buy" href="https://wa.me/601155431924" target="_blank" rel="noopener">Beli Sekarang</a>
+        </div>
+
+        <!-- PANEL -->
+        <div class="item">
+          <div><strong>PANEL 5GB 10 HARI AKTIF</strong> </div>
+          <div class="price">RM1.00</div>
+          <a class="buy" href="https://wa.me/601155431924" target="_blank" rel="noopener">Beli Sekarang</a>
+        </div>
+    </section>
+  </main>
+
+  <!-- MODAL QR -->
+  <div class="modal" id="qrModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 class="modal-title">QR TNG</h3>
+        <button class="close" id="closeQr">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <img class="modal-img" src="https://files.catbox.moe/68zjpc.jpg" alt="QR TNG">
+      </div>
+    </div>
   </div>
-</div>
-    <div class="product">
-      <div class="product-info"><span>MURBUG GACOR</span><span class="price">RM5.00</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20MURBUG" target="_blank">Beli Sekarang</a>
-    </div>
 
-    <div class="product">
-      <div class="product-info"><span>JASA BUG 1 NOMBOR</span><span class="price">RM1.00</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20JASA%20BUG%201%20NOMBOR" target="_blank">Beli Sekarang</a>
-    </div>
+  <script>
+    const enterBtn = document.getElementById('enterBtn');
+    const music = document.getElementById('music');
+    const intro = document.getElementById('intro');
+    const app = document.getElementById('app');
 
-    <div class="product">
-      <div class="product-info"><span>PANEL UNLIMITED</span><span class="price">RM2.00</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20PANEL%20UNLIMITED" target="_blank">Beli Sekarang</a>
-    </div>
+    const qrBtn = document.getElementById('qrBtn');
+    const lihatBtn = document.getElementById('lihatBtn');
+    const produk = document.getElementById('produk');
 
-    <div class="product">
-      <div class="product-info"><span>RESELLER PANEL</span><span class="price">RM7.00</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20RESELLER%20PANEL" target="_blank">Beli Sekarang</a>
-    </div>
+    const qrModal = document.getElementById('qrModal');
+    const closeQr = document.getElementById('closeQr');
 
-    <div class="product">
-      <div class="product-info"><span>PROMOTER BAHAN 1×</span><span class="price">RM0.20</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20PROMOTER%20BAHAN%201×" target="_blank">Beli Sekarang</a>
-    </div>
+    // Masuk & main lagu
+    enterBtn.addEventListener('click', async () => {
+      intro.style.display = 'none';
+      app.style.display = 'block';
+      try {
+        music.volume = 1.0;
+        await music.play(); // user gesture -> boleh autoplay
+      } catch(e){
+        console.warn('Autoplay disekat, user boleh play manual:', e);
+      }
+      // Smooth scroll ke atas konten
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
-    <div class="product">
-      <div class="product-info"><span>BOT PUSH KONTAK</span><span class="price">RM3.00</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20BOT%20PUSH%20KONTAK" target="_blank">Beli Sekarang</a>
-    </div>
+    // QR modal
+    qrBtn.addEventListener('click', () => {
+      qrModal.style.display = 'grid';
+    });
+    closeQr.addEventListener('click', () => {
+      qrModal.style.display = 'none';
+    });
+    qrModal.addEventListener('click', (e) => {
+      if (e.target === qrModal) qrModal.style.display = 'none';
+    });
 
-    <div class="product">
-      <div class="product-info"><span>BOT PROMOTER×PUSH KONTAK</span><span class="price">RM4.50</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20BOT%20PROMOTER×PUSH%20KONTAK" target="_blank">Beli Sekarang</a>
-    </div>
-
-    <div class="product">
-      <div class="product-info"><span>BOT ALL FITUR</span><span class="price">RM5.00</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20BOT%20ALL%20FITUR" target="_blank">Beli Sekarang</a>
-    </div>
-
-    <div class="product">
-      <div class="product-info"><span>SC PUSH KONTAK</span><span class="price">RM3.00</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20SC%20PUSH%20KONTAK" target="_blank">Beli Sekarang</a>
-    </div>
-
-    <div class="product">
-      <div class="product-info"><span>SC CPANEL</span><span class="price">RM1.50</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20SC%20CPANEL" target="_blank">Beli Sekarang</a>
-    </div>
-
-    <div class="product">
-      <div class="product-info"><span>SC JAGA GRUP</span><span class="price">RM5.00</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20beli%20SC%20JAGA%20GRUP" target="_blank">Beli Sekarang</a>
-    </div>
-
-    <div class="product">
-      <div class="product-info"><span>SC BUG GACOR</span><span class="price">❓ TANYA OWNER</span></div>
-      <a class="buy-button" href="https://wa.me/601155431924?text=Hai,%20saya%20ingin%20tanya%20harga%20SC%20BUG%20GACOR" target="_blank">Tanya Owner</a>
-    </div>
-
-    <div class="footer">
-      © 2025 EKAL SHOP • Order via WhatsApp 📲
-    </div>
-  </div>
-</div>
-
-<!-- SCRIPT -->
-<script>
-  const video = document.getElementById('introVideo');
-  const intro = document.getElementById('intro');
-  const main = document.getElementById('main-content');
-  const skipBtn = document.getElementById('skip-btn');
-  const qrBtn = document.getElementById('qr-toggle-btn');
-  const qrPopup = document.getElementById('qr-popup');
-  const closeQrBtn = document.getElementById('close-qr-btn');
-
-  qrBtn.addEventListener('click', () => {
-    qrPopup.style.display = 'flex';
-  });
-
-  closeQrBtn.addEventListener('click', () => {
-    qrPopup.style.display = 'none';
-  });
-
-  video.addEventListener('ended', () => {
-    intro.style.display = 'none';
-    main.style.display = 'block';
-  });
-
-  skipBtn.addEventListener('click', () => {
-    video.pause();
-    intro.style.display = 'none';
-    main.style.display = 'block';
-  });
-</script>
-
+    // Toggle produk list
+    let productShown = false;
+    lihatBtn.addEventListener('click', () => {
+      productShown = !productShown;
+      produk.style.display = productShown ? 'block' : 'none';
+      lihatBtn.textContent = productShown ? 'SEMBUNYI PRODUK' : 'LIHAT PRODUK';
+    });
+  </script>
 </body>
 </html>
